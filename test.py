@@ -16,9 +16,11 @@ import tsp
 #     [1972, 579, 1260, 987, 371, 999, 701, 2099, 600, 1162, 1200, 504, 0],
 # ]
 
-cost = [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]
+# cost = [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]
 
 
-nodes = [str(i) for i in range(len(cost))]
+# nodes = [str(i) for i in range(len(cost))]
+nodes = [str(i) for i in range(3)]
 
-tsp.tsp(nodes, cost)
+# it seems that passing list[list[int]] is shitting everything
+print(tsp.tsp(nodes, []))
