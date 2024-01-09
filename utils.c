@@ -52,9 +52,10 @@ int nxt_neighbour(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
       int o_i = (i + 1) % length;
       int o_j = (j + 1) % length;
 
-      int delta_cost =
-          get_elem(nodes_weight, i, j) + get_elem(nodes_weight, o_i, o_j) -
-          get_elem(nodes_weight, i, o_i) - get_elem(nodes_weight, j, o_j);
+      int delta_cost = get_elem(nodes_weight, arr[i], arr[j]) +
+                       get_elem(nodes_weight, arr[o_i], arr[o_j]) -
+                       get_elem(nodes_weight, arr[i], arr[o_i]) -
+                       get_elem(nodes_weight, arr[j], arr[o_j]);
 
       if (delta_cost < 0 && delta_cost < current_delta_cost) {
         swap1 = i;
@@ -66,6 +67,7 @@ int nxt_neighbour(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
   }
 
   if (changed == 1) {
+    swap1 += 1;
     int width = swap2 - swap1;
     int end_elem = 0;
 
