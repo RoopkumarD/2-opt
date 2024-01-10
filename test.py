@@ -1,3 +1,8 @@
+import cProfile
+import io
+import pstats
+import time
+
 import tsp
 
 cost = [
@@ -17,11 +22,13 @@ cost = [
 ]
 
 
-nodes = [str(i) for i in range(len(cost))]
-
-print(nodes)
-k = tsp.tsp(nodes, cost)
+pr = cProfile.Profile()
+pr.enable()
+k = tsp.tsp(cost, 10)
+pr.disable()
+s = io.StringIO()
+sortby = "cumulative"
+ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+ps.print_stats()
+print(s.getvalue())
 print(k)
-k["order"][0] = "roop"
-print(k)
-print(nodes)
