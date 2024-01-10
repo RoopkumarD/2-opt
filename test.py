@@ -1,7 +1,6 @@
 import cProfile
 import io
 import pstats
-import time
 
 import tsp
 
@@ -24,7 +23,7 @@ cost = [
 
 pr = cProfile.Profile()
 pr.enable()
-k = tsp.tsp(cost, 10)
+k = tsp.tsp(cost, 4)
 pr.disable()
 s = io.StringIO()
 sortby = "cumulative"

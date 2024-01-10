@@ -8,27 +8,66 @@ static PyObject *method_tsp(PyObject *self, PyObject *args) {
     return NULL;
   }
 
-  Py_ssize_t nodes_length = PyList_Size(nodes_weights);
-  srand(time(NULL));
-
+  // defining all required variables
   int *final_arr = NULL;
-  int current_delta_cost = 0;
+  PyObject *lst = NULL;
+  PyObject *cost_obj = NULL;
+  PyObject *dict = NULL;
+
+  // checking if repeat is greater than 1 or equal
+  if (repeat < 1) {
+    PyErr_SetString(PyExc_ValueError,
+                    "repeat must be equal to or greater than 1");
+    goto error_cleanup;
+  }
+
+  // checking if nodes_weights is 2x2 square matrix, with inputs as integers
+  // first checking if outer object is list
+  if (!PyList_Check(nodes_weights)) {
+    PyErr_SetString(PyExc_TypeError, "nodes_weights must be a list");
+    goto error_cleanup;
+  }
+  // checking if it has some elem or not
+  Py_ssize_t nodes_length = PyList_Size(nodes_weights);
+  if (nodes_length <= 0) {
+    PyErr_SetString(PyExc_ValueError,
+                    "nodes_weights must not be an empty list");
+    goto error_cleanup;
+  }
+  // then checking inside is list
+  if (!PyList_Check(PyList_GetItem(nodes_weights, 0))) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Inner elements of nodes_weights must be lists");
+    goto error_cleanup;
+  }
+  // checking if inner list has same length
+  for (int i = 0; i < nodes_length; i++) {
+    if (PyList_Size(PyList_GetItem(nodes_weights, i)) != nodes_length) {
+      PyErr_SetString(PyExc_ValueError,
+                      "Inner lists of nodes_weights must have the same length");
+      goto error_cleanup;
+    }
+  }
+  // don't have to worry about content of matrix, as get_elem will throw err
+  // if tried to interpret anything as int
+
+  srand(time(NULL));
+  // setting big number initially
+  long current_cost = 2147483000;
 
   for (int i = 0; i < repeat; i++) {
     int *arr = (int *)malloc(nodes_length * sizeof(int));
     if (arr == NULL) {
-      puts("Wasn't able to allocate memory");
-      return NULL;
+      PyErr_SetString(PyExc_MemoryError,
+                      "Failed to allocate memory for temporary array");
+      goto error_cleanup;
     }
 
-    int delta_cost = hill_climb(arr, nodes_length, nodes_weights);
-    // mistake!!!!!!
-    // can't compare two different starting arr delta_cost
-    if (delta_cost < current_delta_cost) {
-      if (final_arr != NULL) {
-        free(final_arr);
-      }
-      current_delta_cost = delta_cost;
+    hill_climb(arr, nodes_length, nodes_weights);
+    long cost = get_cost(nodes_weights, arr, nodes_length);
+    if (cost < current_cost) {
+      free(final_arr);
+      current_cost = cost;
       final_arr = arr;
     } else {
       free(arr);
@@ -36,59 +75,58 @@ static PyObject *method_tsp(PyObject *self, PyObject *args) {
   }
 
   // building the order
-  PyObject *lst = PyList_New(nodes_length);
+  lst = PyList_New(nodes_length);
   if (lst == NULL) {
-    puts("Wasn't able to create list");
-    return NULL;
+    PyErr_SetString(PyExc_MemoryError,
+                    "Failed to create a new temp Python list");
+    goto error_cleanup;
   }
-  // finding the cost
-  int cost = 0;
-  for (int i = 0; i < nodes_length - 1; i++) {
-    // adding the cost
-    cost += get_elem(nodes_weights, final_arr[i], final_arr[i + 1]);
-
+  for (int i = 0; i < nodes_length; i++) {
     // adding elem in list
     PyObject *elem = PyLong_FromLong(final_arr[i]);
     if (elem == NULL) {
-      puts("Wasn't able to copy");
-      return NULL;
+      PyErr_SetString(PyExc_MemoryError,
+                      "Failed to create a new temp elem variable");
+      goto error_cleanup;
     }
     PyList_SetItem(lst, i, elem);
   }
-  // for last elem
-  cost += get_elem(nodes_weights, final_arr[nodes_length - 1], final_arr[0]);
-  PyObject *elem = PyLong_FromLong(final_arr[nodes_length - 1]);
-  if (elem == NULL) {
-    puts("Wasn't able to copy");
-    return NULL;
-  }
-  PyList_SetItem(lst, nodes_length - 1, elem);
 
   // combining results in dict
-  PyObject *dict = PyDict_New();
+  dict = PyDict_New();
   if (dict == NULL) {
-    puts("Wasn't able to create list");
-    return NULL;
+    PyErr_SetString(PyExc_MemoryError, "Failed to create return dict");
+    goto error_cleanup;
   }
   if (PyDict_SetItemString(dict, "order", lst) == -1) {
-    puts("Failed to assign elem to dict");
-    return NULL;
+    PyErr_SetString(PyExc_RuntimeError,
+                    "Failed to set 'order' in return dictionary");
+    goto error_cleanup;
   }
   Py_DECREF(lst);
-  PyObject *cost_obj = PyLong_FromLong(cost);
+  cost_obj = PyLong_FromLong(current_cost);
   if (cost_obj == NULL) {
-    puts("cost obj null");
-    return NULL;
+    PyErr_SetString(PyExc_MemoryError,
+                    "Failed to create temporary Long Python variable");
+    goto error_cleanup;
   }
   if (PyDict_SetItemString(dict, "cost", cost_obj) == -1) {
-    puts("Failed to assign elem to dict");
-    return NULL;
+    PyErr_SetString(PyExc_RuntimeError,
+                    "Failed to set 'cost' in return dictionary");
+    goto error_cleanup;
   }
   Py_DECREF(cost_obj);
 
   free(final_arr);
 
   return dict;
+
+error_cleanup:
+  free(final_arr);
+  Py_XDECREF(lst);
+  Py_XDECREF(cost_obj);
+  Py_XDECREF(dict);
+  return NULL;
 }
 
 static PyMethodDef TSPMethods[] = {{"tsp", method_tsp, METH_VARARGS, NULL},

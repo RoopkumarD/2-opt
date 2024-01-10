@@ -1,8 +1,17 @@
 #include <python3.10/Python.h>
 
-Py_ssize_t get_elem(PyObject *weights, Py_ssize_t row_num, Py_ssize_t col_num) {
-  return PyLong_AsSize_t(
+long get_elem(PyObject *weights, Py_ssize_t row_num, Py_ssize_t col_num) {
+  return PyLong_AsLong(
       PyList_GetItem(PyList_GetItem(weights, row_num), col_num));
+}
+
+long get_cost(PyObject *weights, int *order, int nodes_length) {
+  long cost = 0;
+  for (int i = 0; i < nodes_length - 1; i++) {
+    cost += get_elem(weights, order[i], order[i + 1]);
+  }
+  cost += get_elem(weights, order[nodes_length - 1], order[0]);
+  return cost;
 }
 
 // src https://stackoverflow.com/a/6852396/22554550
@@ -85,7 +94,7 @@ int nxt_neighbour(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
   return current_delta_cost;
 }
 
-int hill_climb(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
+void hill_climb(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
   random_walk(arr, length);
   int changed = 1;
   int delta_cost = 0;
@@ -99,5 +108,5 @@ int hill_climb(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
     }
   }
 
-  return delta_cost;
+  return;
 }
