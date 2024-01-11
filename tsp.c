@@ -14,13 +14,13 @@ static PyObject *method_tsp(PyObject *self, PyObject *args) {
   PyObject *cost_obj = NULL;
   PyObject *dict = NULL;
 
+  // Input validation
   // checking if repeat is greater than 1 or equal
   if (repeat < 1) {
     PyErr_SetString(PyExc_ValueError,
                     "repeat must be equal to or greater than 1");
     goto error_cleanup;
   }
-
   // checking if nodes_weights is 2x2 square matrix, with inputs as integers
   // first checking if outer object is list
   if (!PyList_Check(nodes_weights)) {
@@ -35,21 +35,28 @@ static PyObject *method_tsp(PyObject *self, PyObject *args) {
     goto error_cleanup;
   }
   // then checking inside is list
-  if (!PyList_Check(PyList_GetItem(nodes_weights, 0))) {
-    PyErr_SetString(PyExc_TypeError,
-                    "Inner elements of nodes_weights must be lists");
-    goto error_cleanup;
-  }
   // checking if inner list has same length
   for (int i = 0; i < nodes_length; i++) {
-    if (PyList_Size(PyList_GetItem(nodes_weights, i)) != nodes_length) {
+    PyObject *inner = PyList_GetItem(nodes_weights, i);
+    if (!PyList_Check(inner)) {
+      PyErr_SetString(PyExc_TypeError,
+                      "Inner elements of nodes_weights must be lists");
+      goto error_cleanup;
+    }
+    if (PyList_Size(inner) != nodes_length) {
       PyErr_SetString(PyExc_ValueError,
                       "Inner lists of nodes_weights must have the same length");
       goto error_cleanup;
     }
+    for (int j = 0; j < nodes_length; j++) {
+      if (!PyLong_Check(PyList_GetItem(inner, j))) {
+        PyErr_SetString(
+            PyExc_TypeError,
+            "Inner elements inside nodes_weights must be of type number");
+        goto error_cleanup;
+      }
+    }
   }
-  // don't have to worry about content of matrix, as get_elem will throw err
-  // if tried to interpret anything as int
 
   srand(time(NULL));
   // setting big number initially
