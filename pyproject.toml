@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tsp"
+authors = [
+  {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
+]
+version = "0.9.0"
+description = "Solve tsp problem with 2-opt strategy"
+readme = "README.md"
+license = {file = "LICENSE.md"}
+keywords = ["2-opt", "travelling salesman problem", "python"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+]
+
+[project.urls]
+Homepage = "https://github.com/RoopkumarD/tsp"
+Repository = "https://github.com/RoopkumarD/tsp"
+Issues = "https://github.com/RoopkumarD/tsp/issues"

@@ -97,13 +97,11 @@ int nxt_neighbour(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
 void hill_climb(int *arr, Py_ssize_t length, PyObject *nodes_weight) {
   random_walk(arr, length);
   int changed = 1;
-  int delta_cost = 0;
 
   while (changed == 1) {
     changed = 0;
     int current_delta_cost = nxt_neighbour(arr, length, nodes_weight);
     if (current_delta_cost < 0) {
-      delta_cost = current_delta_cost;
       changed = 1;
     }
   }
