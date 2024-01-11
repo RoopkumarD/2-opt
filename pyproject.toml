@@ -7,13 +7,12 @@ name = "tsp"
 authors = [
   {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
 ]
-version = "0.9.0"
+version = "1.0.0"
 description = "Solve tsp problem with 2-opt strategy"
 readme = "README.md"
 license = {file = "LICENSE.md"}
 keywords = ["2-opt", "travelling salesman problem", "python"]
 classifiers = [
-  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
 ]
 

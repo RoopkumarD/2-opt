@@ -1,55 +1,85 @@
-[![license](https://img.shields.io/badge/license-MIT-success)](https://github.com/pdrm83/Py2Opt/blob/master/LICENSE.md)
-[![doc](https://img.shields.io/badge/docs-Medium-blue)](https://towardsdatascience.com/how-to-solve-the-traveling-salesman-problem-a-comparative-analysis-39056a916c9f)
+[![license](https://img.shields.io/badge/license-MIT-success)](https://github.com/RoopkumarD/2-opt/blob/main/LICENSE.md)
 
-# 2-Opt Search Algorithm
+# Solving TSP with 2-opt as a Heuristic
 
-In optimization, 2-opt is a simple local search algorithm with a special swapping mechanism that suits well to solve the
-traveling salesman problem. This algorithm is sensitive to the initial point of search, i.e., its final results get
-changed by different initial points. 2-opt runs very fast such that a tsp with 120 cities can be solved in less than
-5 sec on the intel core i7. To get a more reliable result, you should run the 2-opt with different randomized initial
-points for enough number of times. One more thing, the travelling salesman problem has many applications in real world
-such as logistic planning or DNA sequencing. So, having a fast and simple method to solve the TSP is valuable. For more
-detailed description, you can read this article: [How to Solve the Traveling Salesman Problem — A Comparative Analysis](https://towardsdatascience.com/how-to-solve-the-traveling-salesman-problem-a-comparative-analysis-39056a916c9f)
+This Python library, written in C, provides an optimal approximate solution for the Travelling Salesman Problem (TSP) using
+the 2-opt heuristic. The library includes a built-in random restart strategy, allowing you to specify the number of restart
+iterations.
 
-## Install
+## Get Started
 
-The module requires the following libraries:
+This library has no dependencies and can be used by building a wheel (whl) file.
 
-- numpy
-- random2
+First, let's download `build`, which will help us build this library:
 
-Then, it can be installed using pip:
+```bash
+pip install build
+```
 
-```python
-pip install py2opt
+Then run this command:
+
+```bash
+python -m build
+```
+
+This will generate a `dist` directory containing our library's wheel (whl) file.
+
+Now, you can either install the library globally, but I would recommend creating a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Now let's install the library.
+
+```bash
+pip install dist/tsp-...whl
 ```
 
 ## Usage
 
-To use this module, you must have a distance matrix `dist_mat` showing the pair distance among all nodes. Then, the
-first thing to do is create an instance of the `RouteFinder` class. When you call the `solve` method, you will get the
-`best_route` and `best_distance` of this problem. Check out the example below.
+To use this module, you need a distance matrix `dist_mat` representing the pairwise distances between all nodes. Here,
+`dist_mat[i][j]` denotes the distance from node i to node j.
 
 ```python
-from py2opt.routefinder import RouteFinder
+from tsp import tsp2opt
 
-cities_names = ['A', 'B', 'C', 'D']
-dist_mat = [[0, 29, 15, 35], [29, 0, 57, 42], [15, 57, 0, 61], [35, 42, 61, 0]]
-route_finder = RouteFinder(dist_mat, cities_names, iterations=5)
-best_distance, best_route = route_finder.solve()
+cost = [
+    [0, 2451, ...,1420, 2145, 1972],
+    ...
+    [1972, 579, ..., 1200, 504, 0],
+]
 
-print(best_distance)
-114
-print(best_route)
-['A', 'C', 'B', 'D']
+# The first argument is dist_mat,
+# and the second argument is the number of random restart iterations.
+k = tsp2opt(cost, 4)
+print(k)
 ```
 
-The solver finds out the optimum order (re: minimum total distance traveled) in which the nodes must be visited along
-with the total distance traveled. Note that the 2-opt algorithm doesn't guarantee the global optimum similar to other
-heuristic search algorithms. So, the results can vary in each iteration.
+This will output:
 
-And that's pretty much it!
+```bash
+{'order': [7, 0, 9, 5, 10, 11, 1, 8, 6, 12, 4, 3, 2], 'cost': 7293}
+```
 
-## reference
+Here, 'order' represents the sequence to follow, and it is cyclic. The 'cost' is the total distance traveled for this
+sequence.
 
-https://stackoverflow.com/questions/76467019/solved-how-to-get-cffi-and-setuptools-to-find-c-files-and-headers
+## Issues and Support
+
+If you encounter any issues or have questions about using the library, please feel free to [open an
+issue](https://github.com/RoopkumarD/2-opt/issues) on the GitHub repository. Your feedback and contributions are welcome!
+
+## References
+
+This library was developed with the help of the following resources:
+
+- [Solving header files issue](https://stackoverflow.com/questions/76467019/solved-how-to-get-cffi-and-setuptools-to-find-c-files-and-headers)
+- [Used py2opt lib readme as base for this readme](https://github.com/pdrm83/py2opt)
+- [C extension learning](https://llllllllll.github.io/c-extension-tutorial/index.html)
+- [C extension learning](https://pythonextensionpatterns.readthedocs.io/en/latest/refcount.html#)
+- [Original Python docs for C API](https://docs.python.org/3/c-api/)
+- [Example inspiration](https://developers.google.com/optimization/routing/tsp#complete_programs)
+- [Packaging the extension](https://setuptools.pypa.io/en/latest/userguide/ext_modules.html)
+- [Guide for publishing the library](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
