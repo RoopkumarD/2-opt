@@ -5,7 +5,7 @@ from setuptools import Extension, find_packages, setup
 setup(
     ext_modules=[
         Extension(
-            name="tsp",
+            name="tspsolver",
             sources=["tsp/tspmodule.c", "tsp/utils.c"],
             include_dirs=[os.path.dirname(os.path.realpath(__file__))],
         ),

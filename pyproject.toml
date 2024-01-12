@@ -3,11 +3,11 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tsp"
+name = "tspsolver"
 authors = [
   {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
 ]
-version = "1.0.0"
+version = "0.1.0"
 description = "Solve tsp problem with 2-opt strategy"
 readme = "README.md"
 license = {file = "LICENSE.md"}
@@ -17,6 +17,6 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/RoopkumarD/tsp"
-Repository = "https://github.com/RoopkumarD/tsp"
-Issues = "https://github.com/RoopkumarD/tsp/issues"
+Homepage = "https://github.com/RoopkumarD/tspsolver"
+Repository = "https://github.com/RoopkumarD/tspsolver"
+Issues = "https://github.com/RoopkumarD/tspsolver/issues"

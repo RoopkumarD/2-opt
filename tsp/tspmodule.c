@@ -139,10 +139,10 @@ error_cleanup:
 static PyMethodDef TSPMethods[] = {
     {"tsp2opt", method_tsp2opt, METH_VARARGS, NULL}, {NULL, NULL, 0, NULL}};
 
-static struct PyModuleDef tspmodule = {PyModuleDef_HEAD_INIT, "tsp",
+static struct PyModuleDef tspmodule = {PyModuleDef_HEAD_INIT, "tspsolver",
                                        "TSP 2-opt module", -1, TSPMethods};
 
-PyMODINIT_FUNC PyInit_tsp(void) {
+PyMODINIT_FUNC PyInit_tspsolver(void) {
   PyObject *module = PyModule_Create(&tspmodule);
   return module;
 }

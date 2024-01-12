@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-MIT-success)](https://github.com/RoopkumarD/2-opt/blob/main/LICENSE.md)
+[![license](https://img.shields.io/badge/license-MIT-success)](https://github.com/RoopkumarD/tspsolver/blob/main/LICENSE.md)
 
 # Solving TSP with 2-opt as a Heuristic
 
@@ -43,7 +43,7 @@ To use this module, you need a distance matrix `dist_mat` representing the pairw
 `dist_mat[i][j]` denotes the distance from node i to node j.
 
 ```python
-from tsp import tsp2opt
+from tspsolver import tsp2opt
 
 cost = [
     [0, 2451, ...,1420, 2145, 1972],
@@ -69,7 +69,7 @@ sequence.
 ## Issues and Support
 
 If you encounter any issues or have questions about using the library, please feel free to [open an
-issue](https://github.com/RoopkumarD/2-opt/issues) on the GitHub repository. Your feedback and contributions are welcome!
+issue](https://github.com/RoopkumarD/tspsolver/issues) on the GitHub repository. Your feedback and contributions are welcome!
 
 ## References
 
