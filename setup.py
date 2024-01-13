@@ -6,7 +6,7 @@ setup(
     ext_modules=[
         Extension(
             name="tspsolver",
-            sources=["tsp/tspmodule.c", "tsp/utils.c"],
+            sources=["tsp/tspmodule.c", "tsp/utils.c", "tsp/hill_climb.c"],
             include_dirs=[os.path.dirname(os.path.realpath(__file__))],
         ),
     ],

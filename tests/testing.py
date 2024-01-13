@@ -1,4 +1,4 @@
-from tspsolver import tsp2opt
+from tspsolver import tsp2opt, tspsa
 
 cost = [
     [0, 2451, 713, 1018, 1631, 1374, 2408, 213, 2571, 875, 1420, 2145, 1972],
@@ -16,5 +16,6 @@ cost = [
     [1972, 579, 1260, 987, 371, 999, 701, 2099, 600, 1162, 1200, 504, 0],
 ]
 
-k = tsp2opt(cost, 4)
+# k = tsp2opt(cost, 4)
+k = tspsa(cost, 1000)
 print(k)
