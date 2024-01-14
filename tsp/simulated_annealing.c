@@ -3,18 +3,13 @@
 #include <python3.10/Python.h>
 
 void simulated_annealing(int *arr, Py_ssize_t length, PyObject *nodes_weight,
-                         int max_iterations) {
-  int choosed_worse = 0;
-  int repeated = 0;
-  const double temp = 1000;
+                         int max_iterations, double initial_temp, float alpha) {
+  const double temp = initial_temp;
 
   // initial start
   random_walk(arr, length);
   for (int i = 0; i < max_iterations; i++) {
-    repeated++;
-    double current_temp = temp / (double)(i + 1);
-    // double current_temp = temp / log(1 + i * 0.01);
-    // double current_temp = temp * exp(-(0.001 * i));
+    double current_temp = temp * exp(-(alpha * i));
 
     // choose a random neighbour based on 2-opt
     int start_elem = randrange(0, length - 3);
@@ -45,13 +40,8 @@ void simulated_annealing(int *arr, Py_ssize_t length, PyObject *nodes_weight,
       double p = exp((double)delta_cost / current_temp);
       // Then generate a random number between 0 to 1
       double random_real_num = rand_01();
-      printf("%f is p and %f is sample with %f delta and %f current_temp and "
-             "%f div\n",
-             p, random_real_num, (double)delta_cost, current_temp,
-             (double)delta_cost / current_temp);
       if (random_real_num <= p) {
         update = 1;
-        choosed_worse += 1;
       }
     }
 
@@ -73,9 +63,6 @@ void simulated_annealing(int *arr, Py_ssize_t length, PyObject *nodes_weight,
       }
     }
   }
-
-  printf("%i\n", choosed_worse);
-  printf("%i\n", repeated);
 
   return;
 }

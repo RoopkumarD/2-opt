@@ -17,5 +17,5 @@ cost = [
 ]
 
 # k = tsp2opt(cost, 4)
-k = tspsa(cost, 1000)
-print(k)
+min = tspsa(cost, 500, 1000, 0.03)
+print(min)

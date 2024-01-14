@@ -1,10 +1,9 @@
 [![license](https://img.shields.io/badge/license-MIT-success)](https://github.com/RoopkumarD/tspsolver/blob/main/LICENSE.md)
 
-# Solving TSP with 2-opt as a Heuristic
+# TSP Solver with Optimization Strategies
 
-This Python library, written in C, provides an optimal approximate solution for the Travelling Salesman Problem (TSP) using
-the 2-opt heuristic. The library includes a built-in random restart strategy, allowing you to specify the number of restart
-iterations.
+This Python library, implemented in C, offers an efficient approximate solution for the Travelling Salesman Problem (TSP). It
+leverages the 2-opt heuristic and simulated annealing approach to find optimal routes.
 
 ## Get Started
 
@@ -39,17 +38,24 @@ pip install dist/tsp-...whl
 
 ## Usage
 
+This library provides two methods to solve TSP problems: one employs a classic hill climb with random restart, and the other
+uses a simulated annealing approach. Both methods utilize the 2-opt heuristic to find the nearest neighbor.
+
 To use this module, you need a distance matrix `dist_mat` representing the pairwise distances between all nodes. Here,
 `dist_mat[i][j]` denotes the distance from node i to node j.
 
 ```python
-from tspsolver import tsp2opt
-
 cost = [
     [0, 2451, ...,1420, 2145, 1972],
     ...
     [1972, 579, ..., 1200, 504, 0],
 ]
+```
+
+### Classic Hill Climb with Random Restart
+
+```python
+from tspsolver import tsp2opt
 
 # The first argument is dist_mat,
 # and the second argument is the number of random restart iterations.
@@ -65,6 +71,28 @@ This will output:
 
 Here, 'order' represents the sequence to follow, and it is cyclic. The 'cost' is the total distance traveled for this
 sequence.
+
+### Simulated Annealing
+
+```python
+from tspsolver import tspsa
+
+# The first argument is the cost matrix,
+# the second argument is the number of iterations for simulated annealing,
+# the third argument is the initial temperature,
+# and the fourth argument is the cooling factor (alpha)
+
+result = tspsa(cost, 500, 1000, 0.03)
+print(result)
+```
+
+This will yield the same result as the classic hill climb with random restart.
+
+For cooling scheduling, the simulated annealing uses an exponential function
+
+```c
+double current_temp = temp * exp(-(alpha * i));
+```
 
 ## Issues and Support
 

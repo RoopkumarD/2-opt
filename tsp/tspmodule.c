@@ -5,8 +5,11 @@
 static PyObject *method_tspsa(PyObject *self, PyObject *args) {
   PyObject *nodes_weights;
   int max_iteration;
+  double initial_temp;
+  float alpha;
 
-  if (!PyArg_ParseTuple(args, "O|i", &nodes_weights, &max_iteration)) {
+  if (!PyArg_ParseTuple(args, "Oidf", &nodes_weights, &max_iteration,
+                        &initial_temp, &alpha)) {
     return NULL;
   }
 
@@ -21,6 +24,15 @@ static PyObject *method_tspsa(PyObject *self, PyObject *args) {
   if (max_iteration < 1) {
     PyErr_SetString(PyExc_ValueError,
                     "max_iteration must be equal to or greater than 1");
+    goto error_cleanup;
+  }
+  if ((alpha < 0) && (alpha > 1)) {
+    PyErr_SetString(PyExc_ValueError, "alpha should be in range [0,1]");
+    goto error_cleanup;
+  }
+  if (initial_temp < 1) {
+    PyErr_SetString(PyExc_ValueError,
+                    "initial_temp must be equal to or greater than 1");
     goto error_cleanup;
   }
   // checking if nodes_weights is 2x2 square matrix, with inputs as integers
@@ -69,7 +81,8 @@ static PyObject *method_tspsa(PyObject *self, PyObject *args) {
     goto error_cleanup;
   }
 
-  simulated_annealing(final_arr, nodes_length, nodes_weights, max_iteration);
+  simulated_annealing(final_arr, nodes_length, nodes_weights, max_iteration,
+                      initial_temp, alpha);
   long current_cost = get_cost(nodes_weights, final_arr, nodes_length);
 
   // building the order

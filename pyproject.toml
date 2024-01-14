@@ -7,11 +7,11 @@ name = "tspsolver"
 authors = [
   {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
 ]
-version = "0.1.0"
-description = "Solve tsp problem with 2-opt strategy"
+version = "0.1.1"
+description = "Solve tsp problem with optimization strategies"
 readme = "README.md"
 license = {file = "LICENSE.md"}
-keywords = ["2-opt", "travelling salesman problem", "python"]
+keywords = ["2-opt", "simulated annealing", "hill climbing", "random restart", "travelling salesman problem", "python"]
 classifiers = [
   "Intended Audience :: Developers",
 ]
